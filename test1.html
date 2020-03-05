@@ -1,0 +1,249 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+ <head>
+  <title> New Document </title>
+  <meta name="Generator" content="EditPlus">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+
+  <script type="text/javascript" src="..\jsunit\app\jsUnitCore.js"></script>
+
+  <script type="text/javascript" src="test1.js"></script>
+
+  <script type="text/javascript">
+
+  var count = 0;
+
+  // 此函数只执行一次（在页面加载后），类似于JUnit 4.x中的@BeforeClass
+  // 注意：并没有与@AfterClass对应的函数存在
+  function setUpPage()
+  {
+    alert('setUpPage Invoked');
+
+    // 这行代码必须放在setUpPage函数的最后一行
+    // 告诉JsUnit，setUpPage函数已经执行完毕
+
+    setUpPageStatus = "complete";
+  }
+
+
+  // setUp run before every test function
+  function setUp()
+  {
+    //alert(count++);    //JUnit若这样执行,count全是0,因为每一个测试方法都会生成新的测试对象;
+                        //JsUnit会递增count, 因为都是在同一个页面里去执行,所以会基于原有的值
+
+    //设定初始条件
+    document.getElementById("value1").value = 2;
+    document.getElementById("value2").value = 3;
+  }
+
+  // tearDown run after every test function
+  function tearDown()
+  {
+    //alert("tearDown");
+
+    //清理状态
+    document.getElementById("value1").value = "";
+    document.getElementById("value2").value = "";
+    document.getElementById("value3").value = "";
+  }
+
+  // 以下为测试函数（Test Function）
+
+  function testSafe1()
+  {
+    var result = safeMovement(-4, 0);
+
+    assertEquals("safeMovement, value < 0", 0, result);
+}
+
+  function testSafe2()
+  {
+    var result = safeMovement(7, 3);
+
+    assertEquals("safeMovement: value > size - 1", 2, result);
+  }
+
+  function testSafe3()
+  {
+    var result = safeMovement(3, 7);
+
+    assertEquals("safeMovement: value", 3, result);
+  }
+
+  function testturn1()
+  {
+    var result = turn('north', 0);
+
+    assertEquals("Turn: (north, 0) == north", 'north', result);
+  }
+
+  function testturn2()
+  {
+    var result = turn('north', 1);
+
+    assertEquals("Turn: (north, 1) == north", 'east', result);
+  }
+
+  function testturn3()
+  {
+    var result = turn('north', 2);
+
+    assertEquals("Turn: (north, 2) == north", 'south', result);
+  }
+
+  function testturn4()
+  {
+    var result = turn('north', 3);
+
+    assertEquals("Turn: (north, 3) == north", 'west', result);
+  }
+
+  function testturn5()
+  {
+    var result = turn('north', 4);
+
+    assertEquals("Turn: (north, 4) == north", 'north', result);
+  }
+
+  function testturn6()
+  {
+    var result = turn('north', 5);
+
+    assertEquals("Turn: (north, 5) == north", 'east', result);
+  }
+
+  function testGetDir1()
+  {
+      var result = getDirection([1,-5], [1,1]);
+
+      assertEquals("getDirection: diffVertical > diffHorizontal, start[0] - end[0]", 'east', result);
+  }
+
+  function testGetDir2()
+  {
+      var result = getDirection([5,2], [0,1]);
+
+      assertEquals("getDirection: diffVertical > diffHorizontal, start[0] - end[0] =< 0", 'north', result);
+  }
+
+  function testGetDir3()
+  {
+      var result = getDirection([-5,0], [1,1]);
+
+      assertEquals("getDirection: diffVertical < diffHorizontal, start[1] - end[1] > 0", 'south', result);
+  }
+
+  function testGetDir4()
+  {
+      var result = getDirection([1,5], [1,0]);
+
+      assertEquals("getDirection: diffVertical < diffHorizontal, start[1] - end[1] =< 0", 'west', result);
+  }
+
+  function testGetDir5()
+  {
+      var result = getDirection([1,-5], [1,1]);
+
+      assertEquals("getDirection: diffVertical < diffHorizontal, start[1] - end[1] =< 0", 'east', result);
+  }
+
+  function testGetDis1()
+  {
+    var result = getDistance([1,1], [1,1]);
+
+    assertEquals("getDirection: [1,1], [1,1]", 0, result);
+  }
+
+  function testGetDis2()
+  {
+    var result = getDistance([1,2], [3,4]);
+
+    assertEquals("getDirection: [1,2], [3, 4]", 4, result);
+  }
+
+  function testFastDir1()
+{
+  var result = fastGetDirection();
+
+  assertEquals("gfastGetDirection: [], []", 'east', result);
+}
+
+  function testFastDir2()
+  {
+    var result = fastGetDirection([5,2], [0,1]);
+
+    assertEquals("fastGetDirection: diffVertical, start[0] - end[0] > 0", 'north', result);
+  }
+
+  function testFastDir3()
+  {
+  var result = fastGetDirection([-5,0], [1,1]);
+
+  assertEquals("fastGetDirection: diffVertical , start[0] - end[0] =< 0", 'south', result);
+  }
+
+  function testFastDir4()
+  {
+    var result = fastGetDirection([1,5], [1,0]);
+
+    assertEquals("fastGetDirection: !diffVertical, start[1] - end[1] > 0", 'west', result);
+  }
+
+  function testFastDir5()
+  {
+    var result = fastGetDirection();
+
+    assertEquals("fastGetDirection: !diffVertical , start[1] - end[1] =< 0", 'east', result);
+  }
+
+  function testFastDir6()
+  {
+    var result = fastGetDirection();
+
+    assertEquals("fastGetDirection: !diffVertical , start[1] - end[1] =< 0", 'east', result);
+  }
+
+  function testIsV1()
+  {
+    var result = isVisible([2, 1], [1, 1],'north');
+
+    assertTrue("isVisible: north, originalPosition[1] === finalPosition[1] && originalPosition[0] > finalPosition[0]", result);
+  }
+
+  function testIsV2()
+  {
+    var result = isVisible([2, 1], [2, 3],'east');
+
+    assertTrue("isVisible: east,  originalPosition[0] === finalPosition[0] && originalPosition[1] < finalPosition[1]", result);
+  }
+
+  function testIsV3()
+  {
+    var result = isVisible([2, 1], [4, 1],'south');
+
+    assertTrue("isVisible: south, originalPosition[1] === finalPosition[1] && originalPosition[0] < finalPosition[0]", result);
+  }
+
+  function testIsV4()
+  {
+    var result = isVisible([2, 3], [2, 1],'west');
+
+    assertTrue("isVisible: west,  originalPosition[0] === finalPosition[0] && originalPosition[1] > finalPosition[1]", result);
+  }
+
+  </script>
+
+ </head>
+ <body>
+
+  <input type="text" id="value1"><br>
+  <input type="text" id="value2"><br>
+  <input type="text" id="value3"><br>
+
+  <input type="button" value="Add" onclick="addNumbers();">
+
+ </body>
+</html>
